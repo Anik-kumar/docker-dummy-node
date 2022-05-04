@@ -11,8 +11,8 @@ app.use(bodyParser.json());
 
 // Constants
 const PORT = 3000;
-const mongoLocalUrl = "mongodb://admin:password@localhost:27017";
-const mongoDockerUrl = "mongodb://admin:password@mongodb-container";
+const mongoLocalUrl = "mongodb://admin:pasword@localhost:27017";
+const mongoDockerUrl = "mongodb://admin:pasword@mongodb-container";
 const mongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 const database = "user-account";
 
@@ -31,7 +31,13 @@ app.get('/get-profile', (req, res) => {
       if(err) throw err;
 
       client.close();
-      // console.log("Disconnected from database");
+      // console.log("Disconnected from database ", result);
+      if(result == null) {
+        result = {
+          message: "No data found",
+          data: null
+        };
+      }
       res.send(result);
     });
   });

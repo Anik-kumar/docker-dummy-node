@@ -1,7 +1,7 @@
 # A simple project on Docker & Node
 A simple ui backend application using `JavaScript`, `Node`, `Express` to integrate with docker container of `MongoDB` database.
 
-<br>
+
 
 ### Docker | Node | Express | MongoDB
 
@@ -27,23 +27,21 @@ A simple ui backend application using `JavaScript`, `Node`, `Express` to integra
 
 > docker logs
 
-<br>
 <hr>
 <br>
 
-## Developing with Containers
-### pull docker image
-1. `docker pull mongo`
-2. `docker pull mongo-express`
+### Pull docker image
+    docker pull mongo
+    docker pull mongo-express
 
-> next step is to run mongo and mongo-express containers  in order to make mongodb database available for application and also connect
+next step is to run mongo and mongo-express containers  in order to make mongodb database available for application and also connect
 
-### create docker network
-`docker network create mongo-network`
+### Create docker network
+    docker network create mongo-network
 
-> now have to run mongo container inside mongo-express container in docker network
+now have to run mongo container inside mongo-express container in docker network
 
-### run containers
+### Run 'Mongo' container
 ```
 docker run -d \
 -p 27017:27017 \
@@ -53,7 +51,7 @@ docker run -d \
 --net mongo-network \
 mongo
 ```
-
+### Run 'Mongo-Express' container
 ```
 docker run -d \
 -p 8081:8081 \
@@ -65,20 +63,78 @@ docker run -d \
 mongo-express
 ```
 
-> run `docker ps` to check if its running.
+run `docker ps` to check if its running.  
+Go to browser localhost:8081 and create a database "user-account" and create collection "users"
 
-> Go to browser localhost:8081 and create a database "user-account" and create collection "users"
-### connect node server with mongo express
-> go to local nodejs project and start the project.
+### Connect node server with mongo express
+go to local nodejs project and start the project.
 
     node server.js
 
-> Go to localhost:3000
+Go to localhost:3000
 
 
 <br>
 <hr>
 
+## Using Docker Compose
+create a docker compose file and configure containers as services  
+run docker compose  file
+> start containers
+``` 
+docker-compose -f mongo-docker-compose.yaml up -d
+```
+> stop containers  
+
+    docker-compose -f mongo-docker-compose.yaml down -d
+
+>Flow  
+
+![flow](images/img1.png)
+
+## Dockerfile
+create a dockerfile.
+```
+FROM node:13-alpine
+
+ENV MONGO_DB_USERNAME=admin \
+    MONGO_DB_PASSWORD=pasword
+
+RUN mkdir -p /home/app
+
+COPY . /home/app
+
+CMD ["node", "/home/app/server.js"]
+```
+
+
+## Building an image
+    docker build -t my-app:1.0 .
+
+> docker build -t <{image-name}>:<{version}> <{location-of-the-docker-file}>
+
+## Run the container image
+    docker run my-app
+
+
+## Connect with GitLab or other docker container registry
+
+- verify login through cmd
+
+      docker login registry.gitlab.com
+
+- build an image
+      
+      docker build -t registry.gitlab.com/d7705/docker-test/my-app:1.0 .
+
+- push the image
+        
+      docker push registry.gitlab.com/d7705/docker-test/myapp:1.0
+
+  
+
+
+---
 [-p]: port flag.
 
 [-d]: detachable mode flag.
@@ -90,3 +146,7 @@ mongo-express
 [--net]: name of the network.
 
 [--rm]: auto removes the container when stops.
+
+[-f]: file flag
+
+[-t]: docker image name flag while building image
