@@ -125,14 +125,49 @@ CMD ["node", "/home/app/server.js"]
 
 - build an image
       
-      docker build -t registry.gitlab.com/d7705/docker-test/my-app:1.0 .
+      docker build -t <PATH_OF_GITLAB_CONTAINER>my-app:1.0 .
 
 - push the image
         
-      docker push registry.gitlab.com/d7705/docker-test/myapp:1.0
+      docker push <PATH_OF_GITLAB_CONTAINER>myapp:1.0
 
-  
+---
+## Deploy containerized app
+add new container app details in docker-compose file
+``` 
+version "3.1"
+services: 
+  my-app:
+    image: <PATH_OF_REPOGITORY_IMAGE>
+    ports: 
+      - 3000:3000
+  mongodb-container:
+    image: mongo
+```
 
+run the app
+
+    docker-compose -f mongo.yaml up
+
+---
+## Add cmd for Data Persistence
+adding `Named Volumns` for data persistence
+```
+version: '3.1'
+services:
+  my-app: 
+    ...
+  mongodb-container:
+    ...
+    volumes:
+      - mongo-data:/data/db
+  mongo-express-container:
+    ...
+volumes:
+  mongo-data:
+    driver: local
+```
+save & restart docker.
 
 ---
 [-p]: port flag.

@@ -1,5 +1,9 @@
 version: '3.1'
 services:
+  # my-app: 
+  #   image: registry.gitlab.com/d7705/docker-test/my-app:1.0
+  #   ports: 
+  #     - 3000:3000
   mongodb-container:
     image: mongo
     restart: always
@@ -8,6 +12,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=pasword
+    volumes:
+      - mongo-data:/data/db
   mongo-express-container:
     image: mongo-express
     restart: always
@@ -17,3 +23,6 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=pasword
       - ME_CONFIG_MONGODB_SERVER=mongodb-container
+volumes:
+  mongo-data:
+    driver: local
